@@ -3,7 +3,7 @@ from sqlalchemy import text
 from sqlalchemy.orm import Session
 
 from app.database.db import get_db
-from app.schemas.predection_schema import Transaction
+from app.schemas.prediction_schema import Transaction
 from scripts.predictions import predict
 from app.services.rfm_service import calculate_rfm
 
