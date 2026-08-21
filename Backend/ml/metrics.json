@@ -1,0 +1,9 @@
+{
+    "model": "KMeans",
+    "n_clusters": 3,
+    "preprocessing": "QuantileTransformer",
+    "silhouette_score": 0.5156658856655797,
+    "davies_bouldin_score": 0.8037250542897748,
+    "calinski_harabasz_score": 12663.406605150196,
+    "n_customers": 4339
+}

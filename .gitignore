@@ -1,0 +1,68 @@
+# =========================
+# Environment Variables
+# =========================
+Backend/.env
+.env
+.env.*
+!.env.example
+
+
+# =========================
+# Dataset
+# =========================
+Online Retail.xlsx
+*.csv
+*.xlsx
+*.xls
+
+
+# =========================
+# Python
+# =========================
+__pycache__/
+*.py[cod]
+*.pyo
+
+.venv/
+venv/
+env/
+
+.pytest_cache/
+.mypy_cache/
+
+
+# =========================
+# Logs
+# =========================
+Backend/logs/
+*.log
+
+
+# =========================
+# ML generated artifacts
+# =========================
+# Ignore trained models if you don't want to upload them
+# Backend/ml/artifacts/*.pkl
+# Backend/ml/artifacts/*.joblib
+
+
+# =========================
+# Node / React
+# =========================
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+
+
+# =========================
+# IDE
+# =========================
+.vscode/
+.idea/
+
+
+# =========================
+# OS
+# =========================
+.DS_Store
+Thumbs.db
