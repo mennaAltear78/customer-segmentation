@@ -6,3 +6,9 @@ python-dotenv
 openpyxl
 fastapi
 uvicorn
+fastapi
+pydantic
+sqlalchemy
+psycopg2-binary
+
+
