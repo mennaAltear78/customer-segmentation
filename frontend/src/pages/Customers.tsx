@@ -7,7 +7,7 @@ import {
 import { SegmentBadge } from '../components/SegmentBadge';
 import { SearchInput, FilterDropdown } from '../components/SearchAndFilter';
 import { LoadingState, ErrorState, EmptyState } from '../components/States';
-import { ChevronLeft, ChevronRight, RefreshCcw } from 'lucide-react';
+import { ChevronLeft, ChevronRight} from 'lucide-react';
 
 import { Header } from '../components/Header';
 

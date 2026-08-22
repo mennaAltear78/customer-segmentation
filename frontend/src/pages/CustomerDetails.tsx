@@ -5,7 +5,7 @@ import { getCustomerTransactions, type TransactionRecord } from '../api/transact
 import { SegmentBadge } from '../components/SegmentBadge';
 import { RFMCard } from '../components/RFMCard';
 import { LoadingState, ErrorState, EmptyState } from '../components/States';
-import { ArrowLeft, ChevronLeft, ChevronRight, Calendar, Info } from 'lucide-react';
+import { ArrowLeft, ChevronLeft, ChevronRight, Info } from 'lucide-react';
 
 import { Header } from '../components/Header';
 
