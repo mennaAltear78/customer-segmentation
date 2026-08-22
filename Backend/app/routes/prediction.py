@@ -183,12 +183,12 @@ def add_transaction(
         # =========================================================
 
         return {
-            "customer_id": data.customer_id,
-            "recency": rfm["Recency"],
-            "frequency": rfm["Frequency"],
-            "monetary": rfm["Monetary"],
-            "cluster_id": prediction_result["cluster_id"],
-            "segment": prediction_result["segment"]
+            "customer_id": int(data.customer_id),
+            "recency": int(rfm["Recency"]),
+            "frequency": int(rfm["Frequency"]),
+            "monetary": float(rfm["Monetary"]),
+            "cluster_id": int(prediction_result["cluster_id"]),
+            "segment": str(prediction_result["segment"])
         }
 
     except Exception as e:
