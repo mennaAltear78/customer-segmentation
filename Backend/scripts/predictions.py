@@ -12,15 +12,19 @@ from joblib import load
 # =========================
 
 load_dotenv()
-
-PROJECT_ROOT = Path(os.getenv("PROJECT_ROOT"))
+PROJECT_ROOT = Path(
+    os.getenv(
+        "PROJECT_ROOT",
+        Path(__file__).resolve().parent.parent
+    )
+)
 
 MODEL_DIR = (
-    PROJECT_ROOT / os.getenv("MODEL_DIR")
+    PROJECT_ROOT / os.getenv("MODEL_DIR", "ml")
 )
 
 SEGMENTATION_MODEL_PATH = (
-    MODEL_DIR / os.getenv("MODEL_NAME")
+    MODEL_DIR / os.getenv("MODEL_NAME", "CUSTOMER_SEGMENTAION_MODEL.pkl")
 )
 
 CHURN_MODEL_PATH = (
@@ -29,8 +33,8 @@ CHURN_MODEL_PATH = (
 
 LOG_PATH = (
     PROJECT_ROOT
-    / os.getenv("LOG_DIR")
-    / os.getenv("LOG_NAME")
+    / os.getenv("LOG_DIR", "logs")
+    / os.getenv("LOG_NAME", "app.log")
 )
 
 
