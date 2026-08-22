@@ -37,23 +37,26 @@ LOG_PATH = (
     / os.getenv("LOG_NAME", "app.log")
 )
 
+IS_VERCEL = os.getenv("VERCEL") == "1"
+
 
 # =========================
 # Logging
 # =========================
 
-LOG_PATH.parent.mkdir(
-    parents=True,
-    exist_ok=True
-)
+logging_handlers = [logging.StreamHandler()]
+
+if not IS_VERCEL:
+    LOG_PATH.parent.mkdir(
+        parents=True,
+        exist_ok=True
+    )
+    logging_handlers.append(logging.FileHandler(LOG_PATH))
 
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s | %(levelname)s | %(message)s",
-    handlers=[
-        logging.StreamHandler(),
-        logging.FileHandler(LOG_PATH)
-    ]
+    handlers=logging_handlers
 )
 
 
