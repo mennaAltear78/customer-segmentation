@@ -13,5 +13,4 @@ This application provides an interactive interface for customer segmentation ana
 
 ## Live Demo
 You can access the live application here: [Customer Segmentation App](https://fcustomer-segmentation12menna.vercel.app)
-README.md
-Displaying README.md.
+
