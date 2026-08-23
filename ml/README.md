@@ -23,7 +23,7 @@ Customer B
     ├── Transaction 4
     └── Transaction 5
 
-
+```
 ## Future Improvements
 
 ### 1. Cancellation Behavior Analysis
