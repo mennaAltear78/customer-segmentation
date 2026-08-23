@@ -22,3 +22,20 @@ Customer A
 Customer B
     ├── Transaction 4
     └── Transaction 5
+
+
+## Future Improvements
+
+### 1. Cancellation Behavior Analysis
+
+Currently, cancellation transactions are excluded from the RFM calculation
+to prevent them from distorting Recency, Frequency, and Monetary values.
+
+As a future improvement, cancellation behavior could be retained as
+separate customer-level features, such as:
+
+- Cancellation Count
+- Cancellation Rate
+
+These features could be used to analyze whether cancellation behavior
+differs across customer segments without affecting the core RFM calculation.
