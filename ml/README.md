@@ -37,14 +37,21 @@ Customer B
 1. **Exploratory Data Analysis (EDA):**
    * Handled missing values, examined feature distributions (skewness), and inspected statistical summaries.
    * Utilized correlation heatmaps and distribution plots (histograms, box plots) to understand feature interactions.
-
-2. **Feature Preprocessing & Scaling:**
+     
+3. **Transaction-to-Customer Level Transformation (RFM Engineering):**
+   * Aggregated raw transaction-level rows into individual customer profiles.
+   * Engineered **RFM** metrics:
+     * **Recency:** Days since the customer's last purchase.
+     * **Frequency:** Total unique purchases/invoices per customer.
+     * **Monetary:** Total spend accumulated by each customer.
+     * 
+4. **Feature Preprocessing & Scaling:**
    * Tested multiple scaling and transformation strategies to mitigate the impact of skewness and outliers (e.g., comparing standard scalers against non-linear distribution transformations like `QuantileTransformer`).
 
-3. **Dimensionality Reduction:**
+5. **Dimensionality Reduction:**
    * Explored Principal Component Analysis (PCA) to reduce feature dimensionality, visualize cluster separation in 2D space, and understand variance retention.
 
-4. **K-Means Clustering & Choosing K:**
+6. **K-Means Clustering & Choosing K:**
    * **Mathematical Evaluation:** Metrics such as the **Silhouette Score**, **Davies-Bouldin Index**, and **Calinski-Harabasz Score** indicated that **K=2** achieved the strongest mathematical clustering performance and separation.
    * **Business Selection ($K=3$):** Despite $K=2$ scoring higher mathematically, **K=3** was intentionally selected from a business and product perspective to create more actionable, nuanced, and distinct tiers (e.g., low, medium, and high-value segments) rather than an overly broad binary split.
 
