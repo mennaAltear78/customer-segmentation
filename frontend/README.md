@@ -1,4 +1,3 @@
-Analyzing
 # Customer Segmentation Web Application
 
 A machine learning-powered web application designed to segment customers based on behavioral and demographic data, helping businesses analyze and target different customer groups effectively.
