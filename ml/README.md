@@ -44,7 +44,7 @@ Customer B
      * **Recency:** Days since the customer's last purchase.
      * **Frequency:** Total unique purchases/invoices per customer.
      * **Monetary:** Total spend accumulated by each customer.
-     * 
+    
 4. **Feature Preprocessing & Scaling:**
    * Tested multiple scaling and transformation strategies to mitigate the impact of skewness and outliers (e.g., comparing standard scalers against non-linear distribution transformations like `QuantileTransformer`).
 
