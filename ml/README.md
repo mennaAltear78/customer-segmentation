@@ -39,3 +39,21 @@ separate customer-level features, such as:
 
 These features could be used to analyze whether cancellation behavior
 differs across customer segments without affecting the core RFM calculation.
+### 2.Compare Different Clustering Algorithms
+The current solution uses K-Means as the main clustering algorithm because the RFM features are numerical and customer similarity can be represented using distance-based clustering.
+
+As a future improvement, I plan to experiment with other unsupervised clustering algorithms, such as:
+
+- Agglomerative Clustering
+- DBSCAN
+- Other suitable clustering approaches
+
+The different models will be compared based on:
+
+- Silhouette Score
+- Cluster stability
+- Cluster sizes
+- Interpretability of customer segments
+- Business usefulness
+
+The goal is to determine whether K-Means provides the most suitable solution for this customer segmentation problem or whether another clustering approach can produce better and more meaningful segments.
