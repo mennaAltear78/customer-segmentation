@@ -1,75 +1,60 @@
-# React + TypeScript + Vite
+# Customer Segmentation Dashboard - README
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A comprehensive, machine learning-powered Customer Segmentation Dashboard designed to bridge high-level business insights with granular customer and transaction-level data exploration.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Architecture & Data Flow
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```text
+Raw Data
+   │
+   ▼
+Transaction Level (Invoices, Quantities, Unit Prices)
+   │
+   ▼
+RFM Feature Engineering (Recency, Frequency, Monetary)
+   │
+   ▼
+Machine Learning / Clustering (K-Means, Scaler, Encoder)
+   │
+   ▼
+Customer Segmentation & Predictions
+   │
+   ▼
+Frontend Dashboard
+ ┌───────────────────────┐
+ │ 1. Dashboard          │
+ │ 2. Customers          │
+ │ 3. Transactions       │
+ │ 4. Prediction / Input │
+ └───────────────────────┘
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Features & Application Sections
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### 1. Dashboard
+Provides a high-level overview of the entire customer segmentation strategy and business metrics:
+- **Total Customers & Segment Counts:** Summary metrics for key groups (e.g., Champions/VIPs, Potential Loyalists, At-Risk/Hibernating).
+- **Segment Distribution:** Visual bar charts and graphs showing the breakdown of customers across different clusters.
+- **Average RFM Values:** Aggregate metrics displaying average Recency, Frequency, and Monetary values.
+- **Recent Insights:** Real-time visibility into the latest customer segmentation trends.
 
-```
+### 2. Customers
+Brings visibility down to the individual customer level, linking aggregate business views with specific profiles:
+- **Customer Directory:** Complete list of all available customers along with their attributes and assigned clusters.
+- **Detailed Profiles:** Select a specific customer (e.g., Customer X) to inspect their unique segment, RFM scores, and transaction records.
+
+### 3. Transactions
+Explores data at the granular transaction level, giving a comprehensive view of historical purchasing activity:
+- **Transaction Records:** Detailed view featuring invoices, customer mappings, dates, quantities, unit prices, and overall transaction values.
+
+### 4. Prediction & Model Pipeline
+Allows users to input new customer data points, process them through the trained machine learning pipeline (scaler, encoder, and clustering model), and instantly assign them to the correct customer segment.
+
+---
+
+## Live Demo
+Access the live application here: [Customer Segmentation App](https://fcustomer-segmentation12menna.vercel.app)
