@@ -112,7 +112,11 @@ Provides access to granular transaction-level data:
                            ↓
                   Transaction Details
 ```
+## Future Improvements
 
+- **Churn Clustering Integration:** Implementing advanced clustering and predictive models specifically for customer churn analysis to identify at-risk customers before they churn and proactively target them with retention strategies.
+- **Enhanced Real-time Analytics:** Scaling the backend processing pipeline to handle live streaming transaction data for instant segment updates.
+- **Advanced Recommendation System:** Integrating personalized product recommendations based on customer segment behavior.
 ---
 
 ## 6. Application Screenshots
