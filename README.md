@@ -119,17 +119,21 @@ Provides access to granular transaction-level data:
 
 Here is a preview of the application interface across its main sections:
 
-### Dashboard Overview
-![Dashboard Overview](<img width="1830" height="948" alt="image" src="https://github.com/user-attachments/assets/496f9bb9-ab9d-4dd2-8fe5-70ba6d74c9c0" />)
+### Overview & General View
+![Overview](images/image.png)
 
-### Customers Directory & Profiles
-![Customers Page](screenshots/customers.png)
+### Customers Directory
+![Customers Page](images/customers.png)
 
-### Customer Details & Transaction History
-![Customer Details](screenshots/customer_details.png)
+### Customer Details
+![Customer Details](images/customer.png)
 
 ### Transactions View
-![Transactions Page](screenshots/transactions.png)
+![Transactions Page](images/transications.png)
+
+### Prediction & Pipeline View
+![Prediction Page](images/prediction.png)
+![Prediction Details](images/prediction2.png)
 
 ---
 
