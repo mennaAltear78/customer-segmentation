@@ -10,6 +10,6 @@ fastapi
 pydantic
 sqlalchemy
 psycopg2-binary
-multipart
+python-multipart
 
 
