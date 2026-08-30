@@ -101,6 +101,14 @@ CLUSTER_NAMES = {
     2: "Champions / VIP"
 }
 
+SEGMENTATION_FEATURES = list(
+    getattr(segmentation_model, "feature_names_in_", [
+        "Recency",
+        "Frequency",
+        "Monetary",
+    ])
+)
+
 
 # =========================
 # Prediction
@@ -109,13 +117,17 @@ CLUSTER_NAMES = {
 def predict(input_data: dict):
 
     df = pd.DataFrame([input_data])
+    aligned_df = df.reindex(
+        columns=SEGMENTATION_FEATURES,
+        fill_value=0
+    )
 
     # -------------------------
     # Customer Segmentation
     # -------------------------
 
     cluster_id = int(
-        segmentation_model.predict(df)[0]
+        segmentation_model.predict(aligned_df)[0]
     )
 
     segment_name = CLUSTER_NAMES.get(
@@ -135,7 +147,7 @@ def predict(input_data: dict):
     if churn_model is not None:
 
         churn_probability = float(
-            churn_model.predict_proba(df)[0][1]
+            churn_model.predict_proba(aligned_df)[0][1]
         )
 
         churn_prediction = (

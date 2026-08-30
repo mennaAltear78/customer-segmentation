@@ -1,7 +1,11 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.routes.prediction import router
+from app.routes.customers import router as customers_router
+from app.routes.dashboard import router as dashboard_router
+from app.routes.segmentation import router as segementaion_router
+from app.routes.transactions import router as transaction_router
+from app.routes.churn import router as chrun_router
 
 
 app = FastAPI(
@@ -22,4 +26,8 @@ app.add_middleware(
 )
 
 
-app.include_router(router)
+app.include_router(chrun_router)
+app.include_router(customers_router)
+app.include_router(segementaion_router)
+app.include_router(transaction_router)
+app.include_router(dashboard_router)
