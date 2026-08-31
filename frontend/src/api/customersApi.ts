@@ -56,7 +56,7 @@ export interface CustomerDetailsResponse {
 }
 
 export const getCustomers = async (): Promise<CustomersListResponse> => {
-  const response = await apiClient.get<CustomersListResponse>('/api/customers');
+  const response = await apiClient.get<CustomersListResponse>('/api/customers/');
   return response.data;
 };
 

@@ -226,16 +226,16 @@ export const Customers: React.FC<CustomersProps> = ({ onMenuToggle }) => {
                         </span>
                       </td>
                       <td className="py-3 px-4 text-right font-mono font-medium text-[var(--text-secondary)]">
-                        {(row.churn_probability * 100).toFixed(0)}%
+                        {((row.churn_probability ?? 0) * 100).toFixed(0)}%
                       </td>
                       <td className="py-3 px-4 text-right text-[var(--text-secondary)]">
-                        {row.recency} d
+                        {row.recency ?? 0} d
                       </td>
                       <td className="py-3 px-4 text-right text-[var(--text-secondary)]">
-                        {row.frequency}
+                        {row.frequency ?? 0}
                       </td>
                       <td className="py-3 px-4 text-right font-medium text-[var(--text-secondary)]">
-                        ${row.monetary.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                        ${(row.monetary ?? 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       </td>
                       <td className="py-3 px-6 text-center">
                         <button

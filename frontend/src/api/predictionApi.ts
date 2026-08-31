@@ -1,25 +1,13 @@
 import { apiClient } from './client';
 
-export interface PredictionRequest {
-  customer_id?: number | null;
-  invoice_no: string;
-  invoice_date: string;
-  quantity: number;
-  unit_price: number;
-}
-
-export interface PredictionResponse {
+export interface ChurnPredictionResponse {
   customer_id: number;
-  recency: number;
-  frequency: number;
-  monetary: number;
-  cluster_id: number;
-  segment: string;
-  churn_probability?: number;
-  churn_prediction?: boolean;
+  churn_probability: number;
+  prediction: string;
 }
 
-export const predictSegment = async (data: PredictionRequest): Promise<PredictionResponse> => {
-  const response = await apiClient.post<PredictionResponse>('/predection', data);
+export const predictChurn = async (customerId: number): Promise<ChurnPredictionResponse> => {
+  // customer_id is a query parameter as expected by the FastAPI backend
+  const response = await apiClient.post<ChurnPredictionResponse>(`/api/predict-churn/?customer_id=${customerId}`);
   return response.data;
 };

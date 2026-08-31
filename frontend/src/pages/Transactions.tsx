@@ -194,13 +194,13 @@ export const Transactions: React.FC<TransactionsProps> = ({ onMenuToggle }) => {
                           {new Date(tx.invoice_date).toLocaleString()}
                         </td>
                         <td className="py-3 px-4 text-right text-[var(--text-secondary)]">
-                          {tx.quantity}
+                          {tx.quantity ?? 0}
                         </td>
                         <td className="py-3 px-4 text-right text-[var(--text-secondary)]">
-                          ${tx.unit_price.toFixed(2)}
+                          ${(tx.unit_price ?? 0).toFixed(2)}
                         </td>
                         <td className="py-3 px-6 text-right font-semibold text-[var(--text-primary)]">
-                          ${rowTotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                          ${(rowTotal ?? 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                         </td>
                       </tr>
                     );

@@ -407,9 +407,9 @@ export const AddData: React.FC<AddDataProps> = ({ onMenuToggle }) => {
                         <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--text-tertiary)]">Segmentation</span>
                         <div className="flex items-center gap-2 mt-2">
                           <span className="text-base font-bold text-[var(--text-primary)]">
-                            {singleResult.segmentation.segment}
+                            {singleResult.segmentation?.segment ?? 'Unknown'}
                           </span>
-                          <SegmentBadge segment={singleResult.segmentation.segment} />
+                          <SegmentBadge segment={singleResult.segmentation?.segment ?? 'Unknown'} />
                         </div>
                       </div>
 
@@ -417,9 +417,9 @@ export const AddData: React.FC<AddDataProps> = ({ onMenuToggle }) => {
                         <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--text-tertiary)]">Churn Status</span>
                         <div className="flex items-center justify-between mt-2">
                           <span className="text-sm font-semibold text-[var(--text-primary)]">
-                            {(singleResult.churn.churn_probability * 100).toFixed(0)}% — {singleResult.churn.prediction}
+                            {((singleResult.churn?.churn_probability ?? 0) * 100).toFixed(0)}% — {singleResult.churn?.prediction ?? 'Not Churn'}
                           </span>
-                          <span className={`w-2 h-2 rounded-full ${singleResult.churn.prediction === 'Churn' ? 'bg-red-500' : 'bg-emerald-500'}`}></span>
+                          <span className={`w-2 h-2 rounded-full ${singleResult.churn?.prediction === 'Churn' ? 'bg-red-500' : 'bg-emerald-500'}`}></span>
                         </div>
                       </div>
                     </div>
@@ -428,9 +428,9 @@ export const AddData: React.FC<AddDataProps> = ({ onMenuToggle }) => {
                     <div className="space-y-3">
                       <h4 className="text-xs font-bold uppercase tracking-wider text-[var(--text-secondary)]">Recalculated RFM Parameters</h4>
                       <RFMCard
-                        recency={singleResult.rfm.recency}
-                        frequency={singleResult.rfm.frequency}
-                        monetary={singleResult.rfm.monetary}
+                        recency={singleResult.rfm?.recency ?? 0}
+                        frequency={singleResult.rfm?.frequency ?? 0}
+                        monetary={singleResult.rfm?.monetary ?? 0}
                       />
                     </div>
                   </div>

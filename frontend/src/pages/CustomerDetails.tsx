@@ -83,7 +83,10 @@ export const CustomerDetails: React.FC<CustomerDetailsProps> = ({ onMenuToggle }
     );
   }
 
-  const { rfm, segmentation, churn, behavior } = details;
+  const rfm = details?.rfm || { recency: 0, frequency: 0, monetary: 0 };
+  const segmentation = details?.segmentation || { cluster_id: 0, segment: 'Unknown' };
+  const churn = details?.churn || { churn_probability: 0, prediction: 'Not Churn' };
+  const behavior = details?.behavior || { avg_order_value: 0, active_months: 0, avg_gap: 0, gap_std: 0, unique_products: 0, lifetime: 0, spend_trend: 0 };
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -148,7 +151,7 @@ export const CustomerDetails: React.FC<CustomerDetailsProps> = ({ onMenuToggle }
                 <div className="flex justify-between items-end mb-1">
                   <span className="text-sm font-semibold text-[var(--text-secondary)]">Churn Probability</span>
                   <span className="text-lg font-bold font-mono text-[var(--text-primary)]">
-                    {(churn.churn_probability * 100).toFixed(1)}%
+                    {((churn.churn_probability ?? 0) * 100).toFixed(1)}%
                   </span>
                 </div>
                 {/* Meter Bar */}
@@ -157,7 +160,7 @@ export const CustomerDetails: React.FC<CustomerDetailsProps> = ({ onMenuToggle }
                     className={`h-full rounded-full transition-all duration-500 ${
                       churn.prediction === 'Churn' ? 'bg-red-500' : 'bg-emerald-500'
                     }`}
-                    style={{ width: `${churn.churn_probability * 100}%` }}
+                    style={{ width: `${(churn.churn_probability ?? 0) * 100}%` }}
                   ></div>
                 </div>
               </div>
@@ -186,39 +189,39 @@ export const CustomerDetails: React.FC<CustomerDetailsProps> = ({ onMenuToggle }
             <div className="p-4 rounded-xl border border-[var(--border-color)] bg-[var(--bg-secondary)] shadow-xs">
               <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--text-tertiary)]">Average Order Value</span>
               <p className="text-lg font-bold text-[var(--text-primary)] mt-1.5">
-                ${behavior.avg_order_value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                ${(behavior.avg_order_value ?? 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </p>
             </div>
             
             <div className="p-4 rounded-xl border border-[var(--border-color)] bg-[var(--bg-secondary)] shadow-xs">
               <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--text-tertiary)]">Active Months</span>
-              <p className="text-lg font-bold text-[var(--text-primary)] mt-1.5">{behavior.active_months} Months</p>
+              <p className="text-lg font-bold text-[var(--text-primary)] mt-1.5">{behavior.active_months ?? 0} Months</p>
             </div>
 
             <div className="p-4 rounded-xl border border-[var(--border-color)] bg-[var(--bg-secondary)] shadow-xs">
               <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--text-tertiary)]">Average Gap Between Orders</span>
-              <p className="text-lg font-bold text-[var(--text-primary)] mt-1.5">{behavior.avg_gap.toFixed(1)} Days</p>
+              <p className="text-lg font-bold text-[var(--text-primary)] mt-1.5">{(behavior.avg_gap ?? 0).toFixed(1)} Days</p>
             </div>
 
             <div className="p-4 rounded-xl border border-[var(--border-color)] bg-[var(--bg-secondary)] shadow-xs">
               <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--text-tertiary)]">Order Gap Standard Dev</span>
-              <p className="text-lg font-bold text-[var(--text-primary)] mt-1.5">{behavior.gap_std.toFixed(1)} d</p>
+              <p className="text-lg font-bold text-[var(--text-primary)] mt-1.5">{(behavior.gap_std ?? 0).toFixed(1)} d</p>
             </div>
 
             <div className="p-4 rounded-xl border border-[var(--border-color)] bg-[var(--bg-secondary)] shadow-xs">
               <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--text-tertiary)]">Unique Products Ordered</span>
-              <p className="text-lg font-bold text-[var(--text-primary)] mt-1.5">{behavior.unique_products}</p>
+              <p className="text-lg font-bold text-[var(--text-primary)] mt-1.5">{behavior.unique_products ?? 0}</p>
             </div>
 
             <div className="p-4 rounded-xl border border-[var(--border-color)] bg-[var(--bg-secondary)] shadow-xs">
               <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--text-tertiary)]">Account Lifetime Span</span>
-              <p className="text-lg font-bold text-[var(--text-primary)] mt-1.5">{behavior.lifetime} Days</p>
+              <p className="text-lg font-bold text-[var(--text-primary)] mt-1.5">{behavior.lifetime ?? 0} Days</p>
             </div>
 
             <div className="p-4 rounded-xl border border-[var(--border-color)] bg-[var(--bg-secondary)] shadow-xs col-span-2">
               <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--text-tertiary)]">Spend Trend (Second half - First half)</span>
-              <p className={`text-lg font-bold mt-1.5 ${behavior.spend_trend >= 0 ? 'text-emerald-500' : 'text-red-500'}`}>
-                {behavior.spend_trend >= 0 ? '+' : ''}${behavior.spend_trend.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              <p className={`text-lg font-bold mt-1.5 ${(behavior.spend_trend ?? 0) >= 0 ? 'text-emerald-500' : 'text-red-500'}`}>
+                {(behavior.spend_trend ?? 0) >= 0 ? '+' : ''}${(behavior.spend_trend ?? 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </p>
             </div>
           </div>
@@ -267,13 +270,13 @@ export const CustomerDetails: React.FC<CustomerDetailsProps> = ({ onMenuToggle }
                             {new Date(tx.invoice_date).toLocaleString()}
                           </td>
                           <td className="py-3 px-4 text-right text-[var(--text-secondary)]">
-                            {tx.quantity}
+                            {tx.quantity ?? 0}
                           </td>
                           <td className="py-3 px-4 text-right text-[var(--text-secondary)]">
-                            ${tx.unit_price.toFixed(2)}
+                            ${(tx.unit_price ?? 0).toFixed(2)}
                           </td>
                           <td className="py-3 px-6 text-right font-semibold text-[var(--text-primary)]">
-                            ${rowTotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                            ${(rowTotal ?? 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                           </td>
                         </tr>
                       );

@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  Users, DollarSign, Receipt, TrendingUp, AlertTriangle,
-  ArrowRight, Sparkles, Activity, ShieldAlert, BarChart2, Zap, Target,
+  Users, DollarSign, Receipt, TrendingUp,
+  Sparkles, ShieldAlert, BarChart2, Target,
+  AlertTriangle,
+  ArrowRight,
 } from 'lucide-react';
 import {
-  AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid,
-  Tooltip, ResponsiveContainer, PieChart, Pie, Cell,
+  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell,
 } from 'recharts';
 import { getDashboardData, type DashboardData } from '../api/dashboardApi';
 import { LoadingState, ErrorState, EmptyState } from '../components/States';
@@ -42,11 +43,11 @@ interface KpiCardProps {
   darkAccentBg: string;  // e.g. 'dark:bg-cyan-500/20'
 }
 const KpiCard: React.FC<KpiCardProps> = ({ label, value, sub, icon, lightIconBg, lightIconText, darkGlowColor, darkAccentBg }) => (
-  <div className={`
+  <div className="
     relative overflow-hidden rounded-2xl p-5 flex flex-col gap-3 transition-all duration-300 hover:-translate-y-1
     border border-slate-200 bg-white shadow-sm hover:shadow-md
-    dark:border-white/10 dark:shadow-none
-  `}
+    dark:border-white/10 dark:bg-[#101827] dark:shadow-none
+  "
     style={{ ['--glow' as any]: darkGlowColor }}
   >
     {/* Dark mode glow blob */}
@@ -87,11 +88,8 @@ const SectionTitle: React.FC<{ title: string; sub?: string; action?: React.React
 /* ─── Glass / card panel ─────────────────────────────────────── */
 const Panel: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className = '' }) => (
   <div
-    className={`relative rounded-2xl border border-slate-200 bg-white shadow-sm p-5 dark:border-white/8 dark:shadow-none ${className}`}
+    className={`relative rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-colors dark:border-white/10 dark:bg-[#101827] dark:shadow-[0_8px_32px_rgba(0,0,0,0.22)] ${className}`}
   >
-    {/* Dark glass overlay */}
-    <div className="absolute inset-0 rounded-2xl opacity-0 dark:opacity-100 pointer-events-none"
-      style={{ background: 'rgba(255,255,255,0.04)', boxShadow: '0 8px 32px rgba(0,0,0,0.35)' }} />
     <div className="relative z-10">{children}</div>
   </div>
 );
@@ -161,7 +159,6 @@ export const Dashboard: React.FC<DashboardProps> = ({ onApiStatusChange, onMenuT
 
   // Chart axis & grid colors adapt to theme
   const axisColor = isDark ? 'rgba(255,255,255,0.28)' : '#94a3b8';
-  const gridColor = isDark ? 'rgba(255,255,255,0.05)' : '#f1f5f9';
 
   if (loading) return <div className="p-6 lg:p-8 min-h-screen bg-slate-50 dark:bg-[#070b14]"><LoadingState rows={6} /></div>;
   if (error || !dashboardData) {
@@ -172,18 +169,61 @@ export const Dashboard: React.FC<DashboardProps> = ({ onApiStatusChange, onMenuT
     );
   }
 
-  const {
-    total_customers = 0,
-    total_transactions = 0,
-    total_revenue = 0,
-    churn_rate = 0,
-    segments = {},
-    churn = { churn: 0, not_churn: 0 },
-    revenue_over_time = [],
-    top_customers = [],
-    customers_at_risk = [],
-    recent_transactions = [],
-  } = dashboardData || {};
+  // Extract nested properties with robust default fallbacks supporting both flat and nested shapes
+  const segmentation = (dashboardData as any).segmentation || {};
+  const churn = (dashboardData as any).churn || {};
+  const transactions = (dashboardData as any).transactions || {};
+
+  const total_customers = segmentation.total_customers 
+    ?? (dashboardData as any).total_customers 
+    ?? 0;
+
+  const total_transactions = transactions.total_transactions 
+    ?? (dashboardData as any).total_transactions 
+    ?? 0;
+
+  const total_revenue = transactions.total_revenue 
+    ?? (dashboardData as any).total_revenue 
+    ?? 0;
+
+  const churn_rate = churn.average_churn_probability 
+    ?? (dashboardData as any).churn_rate 
+    ?? 0;
+
+  const champions = segmentation.champions 
+    ?? (dashboardData as any).segments?.['Champions / VIP'] 
+    ?? 0;
+
+  const potential_loyalists = segmentation.potential_loyalists 
+    ?? (dashboardData as any).segments?.['Potential Loyalists'] 
+    ?? 0;
+
+  const at_risk_customers = segmentation.at_risk_customers 
+    ?? (dashboardData as any).segments?.['At-Risk / Hibernating'] 
+    ?? 0;
+
+  const churned_customers = churn.churned_customers 
+    ?? churn.churn 
+    ?? 0;
+
+  const not_churned_customers = churn.not_churned_customers 
+    ?? churn.not_churn 
+    ?? 0;
+
+  // const total_predictions = churn.total_predictions 
+  //   ?? (churned_customers + not_churned_customers) 
+  //   ?? 0;
+
+  const avgOrderValue = transactions.average_transaction_value 
+    ?? ((dashboardData as any).average_transaction_value 
+    ?? (total_transactions > 0 ? total_revenue / total_transactions : 0));
+
+  // Build segments mapping dictionary
+  const segments = {
+    'Champions / VIP': champions,
+    'Potential Loyalists': potential_loyalists,
+    'At-Risk / Hibernating': at_risk_customers,
+  };
 
   const segmentEntries = Object.entries(segments).map(([name, value], idx) => ({
     name, value: value as number,
@@ -191,12 +231,11 @@ export const Dashboard: React.FC<DashboardProps> = ({ onApiStatusChange, onMenuT
     color: getSegColor(name, idx),
   }));
 
-  const churnPct = total_customers > 0 ? Math.round((churn.churn / total_customers) * 100) : 0;
+  const churnPct = total_customers > 0 ? Math.round((churned_customers / total_customers) * 100) : 0;
   const churnPieData = [
-    { name: 'Churn Risk', value: churn.churn, fill: '#f43f5e' },
-    { name: 'Stable', value: churn.not_churn, fill: '#10b981' },
+    { name: 'Churn Risk', value: churned_customers, fill: '#f43f5e' },
+    { name: 'Stable', value: not_churned_customers, fill: '#10b981' },
   ];
-  const avgOrderValue = total_transactions > 0 ? total_revenue / total_transactions : 0;
 
   const riskLabel = churnPct > 50 ? 'HIGH' : churnPct > 25 ? 'MEDIUM' : 'LOW';
   const riskBarColor = churnPct > 50
@@ -204,8 +243,6 @@ export const Dashboard: React.FC<DashboardProps> = ({ onApiStatusChange, onMenuT
     : churnPct > 25 ? 'linear-gradient(90deg,#f59e0b,#fbbf24)'
     : 'linear-gradient(90deg,#10b981,#34d399)';
   const riskTextClass = churnPct > 50 ? 'text-rose-500 dark:text-rose-400' : churnPct > 25 ? 'text-amber-500 dark:text-amber-400' : 'text-emerald-500 dark:text-emerald-400';
-
-  // const makeTooltip = () => <ChartTooltip dark={isDark} />;
 
   return (
     <div className="flex flex-col min-h-screen bg-slate-50 dark:bg-[#070b14]">
@@ -217,7 +254,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ onApiStatusChange, onMenuT
         onMenuToggle={onMenuToggle}
       />
 
-      <div className="p-6 lg:p-8 space-y-8 flex-1 overflow-y-auto">
+      <div className="flex-1 space-y-8 overflow-y-auto bg-slate-50 p-6 transition-colors dark:bg-[#070b14] lg:p-8">
 
         {/* ── ROW 1: KPI Strip (6 cards) ── */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
@@ -236,7 +273,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ onApiStatusChange, onMenuT
           <KpiCard label="Churn Rate" value={`${(churn_rate * 100).toFixed(1)}%`} sub="High-risk share"
             icon={<ShieldAlert size={16} />} lightIconBg="bg-rose-100" lightIconText="text-rose-600"
             darkGlowColor="#f43f5e" darkAccentBg="dark:bg-rose-500/20 dark:text-rose-400" />
-          <KpiCard label="At-Risk Count" value={churn.churn.toLocaleString()} sub={`of ${total_customers} customers`}
+          <KpiCard label="At-Risk Count" value={(churn.churned_customers || 0).toLocaleString()} sub={`of ${total_customers} customers`}
             icon={<AlertTriangle size={16} />} lightIconBg="bg-orange-100" lightIconText="text-orange-600"
             darkGlowColor="#f97316" darkAccentBg="dark:bg-orange-500/20 dark:text-orange-400" />
         </div>
@@ -271,7 +308,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ onApiStatusChange, onMenuT
                         <span className="text-xs font-black w-12 text-right" style={{ color: seg.color }}>{seg.pct.toFixed(1)}%</span>
                       </div>
                     </div>
-                    <div className="h-2 rounded-full bg-slate-100 dark:bg-white/5 overflow-hidden">
+                    <div className="h-2 overflow-hidden rounded-full bg-slate-100 dark:bg-white/10">
                       <div className="h-full rounded-full transition-all duration-700"
                         style={{ width: `${seg.pct}%`, background: `linear-gradient(90deg, ${seg.color}90, ${seg.color})` }} />
                     </div>
@@ -353,173 +390,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ onApiStatusChange, onMenuT
           </Panel>
         </div>
 
-        {/* ── ROW 3: Timeseries Charts ── */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-
-          <Panel>
-            <SectionTitle title="Revenue Over Time" sub="Monthly aggregated ledger revenue (£)" />
-            <div className="h-56">
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={revenue_over_time} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
-                  <defs>
-                    <linearGradient id="revenueGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#10b981" stopOpacity={isDark ? 0.25 : 0.15} />
-                      <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
-                  <XAxis dataKey="month" tick={{ fill: axisColor, fontSize: 10 }} axisLine={false} tickLine={false} />
-                  <YAxis tick={{ fill: axisColor, fontSize: 10 }} axisLine={false} tickLine={false} />
-                  <Tooltip content={<ChartTooltip dark={isDark} />} />
-                  <Area type="monotone" dataKey="revenue" stroke="#10b981" strokeWidth={2.5}
-                    fill="url(#revenueGrad)" name="Revenue (£)" dot={false}
-                    activeDot={{ r: 5, fill: '#10b981', stroke: isDark ? '#070b14' : '#fff', strokeWidth: 2 }} />
-                </AreaChart>
-              </ResponsiveContainer>
-            </div>
-          </Panel>
-
-          <Panel>
-            <SectionTitle title="Transaction Volume" sub="Monthly order count by ledger period" />
-            <div className="h-56">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={revenue_over_time} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
-                  <defs>
-                    <linearGradient id="txGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#818cf8" stopOpacity={1} />
-                      <stop offset="100%" stopColor="#4f46e5" stopOpacity={isDark ? 0.7 : 0.5} />
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
-                  <XAxis dataKey="month" tick={{ fill: axisColor, fontSize: 10 }} axisLine={false} tickLine={false} />
-                  <YAxis tick={{ fill: axisColor, fontSize: 10 }} axisLine={false} tickLine={false} />
-                  <Tooltip content={<ChartTooltip dark={isDark} />} />
-                  <Bar dataKey="transactions" fill="url(#txGrad)" radius={[5, 5, 0, 0]} name="Orders" maxBarSize={32} />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          </Panel>
-        </div>
-
-        {/* ── ROW 4: Customer Insight Tables ── */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-
-          {/* Top Spenders */}
-          <Panel>
-            <SectionTitle
-              title="Top Spenders"
-              sub="Highest monetary value profiles"
-              action={
-                <button onClick={() => navigate('/customers')}
-                  className="flex items-center gap-1 text-xs font-semibold text-amber-500 hover:text-amber-400 dark:text-amber-400 dark:hover:text-amber-300 transition-colors">
-                  All <ArrowRight size={11} />
-                </button>
-              }
-            />
-            <div className="space-y-2">
-              {top_customers.length === 0 ? <EmptyState message="No profiles." /> :
-                top_customers.slice(0, 6).map((c, idx) => (
-                  <div key={c.customer_id}
-                    className="flex items-center gap-3 p-2.5 rounded-xl border border-slate-100 hover:border-amber-300 hover:bg-amber-50 dark:border-white/5 dark:hover:border-amber-400/30 dark:hover:bg-white/5 transition-all cursor-pointer"
-                    onClick={() => navigate(`/customer/${c.customer_id}`)}>
-                    <div className="w-6 h-6 rounded-lg flex items-center justify-center text-[10px] font-black flex-shrink-0"
-                      style={{
-                        background: idx === 0 ? 'linear-gradient(135deg,#fbbf24,#f59e0b)' :
-                          idx === 1 ? 'linear-gradient(135deg,#94a3b8,#64748b)' :
-                          idx === 2 ? 'linear-gradient(135deg,#cd7c3a,#92400e)' :
-                          isDark ? 'rgba(255,255,255,0.08)' : '#f1f5f9',
-                        color: idx < 3 ? '#000' : isDark ? 'rgba(255,255,255,0.5)' : '#94a3b8',
-                      }}>
-                      {idx + 1}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <span className="text-xs font-bold text-indigo-500 dark:text-indigo-400 font-mono">#{c.customer_id}</span>
-                      <div className="mt-0.5">
-                        <span className="text-[10px] text-slate-400 dark:text-white/40">{c.segment}</span>
-                      </div>
-                    </div>
-                    <span className="text-xs font-black text-amber-500 dark:text-amber-400">
-                      £{c.monetary.toLocaleString(undefined, { maximumFractionDigits: 0 })}
-                    </span>
-                  </div>
-                ))}
-            </div>
-          </Panel>
-
-          {/* Churn Risk Profiles */}
-          <Panel>
-            <SectionTitle
-              title="Churn Risk Alerts"
-              sub="Highest predicted churn probability"
-              action={
-                <button onClick={() => navigate('/customers')}
-                  className="flex items-center gap-1 text-xs font-semibold text-rose-500 hover:text-rose-400 dark:text-rose-400 dark:hover:text-rose-300 transition-colors">
-                  All <ArrowRight size={11} />
-                </button>
-              }
-            />
-            <div className="space-y-2">
-              {customers_at_risk.length === 0 ? <EmptyState message="No risk alerts." /> :
-                customers_at_risk.slice(0, 6).map((c) => {
-                  const riskPct2 = Math.round(c.churn_probability * 100);
-                  const riskColor2 = riskPct2 > 80 ? '#f43f5e' : riskPct2 > 60 ? '#f97316' : '#f59e0b';
-                  return (
-                    <div key={c.customer_id}
-                      className="p-2.5 rounded-xl border border-slate-100 hover:border-rose-200 hover:bg-rose-50 dark:border-white/5 dark:hover:border-rose-400/30 dark:hover:bg-white/5 transition-all cursor-pointer"
-                      onClick={() => navigate(`/customer/${c.customer_id}`)}>
-                      <div className="flex justify-between items-center mb-1.5">
-                        <span className="text-xs font-bold text-indigo-500 dark:text-indigo-400 font-mono">#{c.customer_id}</span>
-                        <span className="text-xs font-black" style={{ color: riskColor2 }}>{riskPct2}%</span>
-                      </div>
-                      <div className="h-1.5 rounded-full bg-slate-100 dark:bg-white/8 overflow-hidden">
-                        <div className="h-full rounded-full transition-all"
-                          style={{ width: `${riskPct2}%`, background: `linear-gradient(90deg, ${riskColor2}80, ${riskColor2})` }} />
-                      </div>
-                      <span className="text-[10px] text-slate-400 dark:text-white/30 mt-1 block">{c.segment}</span>
-                    </div>
-                  );
-                })}
-            </div>
-          </Panel>
-
-          {/* Recent Transactions */}
-          <Panel>
-            <SectionTitle
-              title="Recent Sales"
-              sub="Latest ledger transaction entries"
-              action={
-                <button onClick={() => navigate('/add-data')}
-                  className="flex items-center gap-1 text-xs font-semibold text-cyan-500 hover:text-cyan-400 dark:text-cyan-400 dark:hover:text-cyan-300 transition-colors">
-                  Add <ArrowRight size={11} />
-                </button>
-              }
-            />
-            <div className="space-y-2">
-              {recent_transactions.length === 0 ? <EmptyState message="No sales records." /> :
-                recent_transactions.slice(0, 6).map((tx, idx) => (
-                  <div key={tx.id ?? idx}
-                    className="flex items-center gap-3 p-2.5 rounded-xl border border-slate-100 hover:bg-slate-50 dark:border-white/5 dark:hover:bg-white/5 transition-all">
-                    <div className="w-7 h-7 rounded-lg bg-indigo-100 dark:bg-indigo-500/15 flex items-center justify-center flex-shrink-0">
-                      <Receipt size={13} className="text-indigo-500 dark:text-indigo-400" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="text-[11px] font-semibold text-slate-700 dark:text-white/80 font-mono truncate">{tx.invoice_no}</div>
-                      <button onClick={() => navigate(`/customer/${tx.customer_id}`)}
-                        className="text-[10px] text-indigo-500 dark:text-indigo-400 hover:underline font-mono">
-                        #{tx.customer_id}
-                      </button>
-                    </div>
-                    <div className="text-right flex-shrink-0">
-                      <span className="text-xs font-black text-emerald-600 dark:text-emerald-400 block">£{tx.total_price.toFixed(2)}</span>
-                      <span className="text-[10px] text-slate-400 dark:text-white/30">{tx.quantity} units</span>
-                    </div>
-                  </div>
-                ))}
-            </div>
-          </Panel>
-        </div>
-
-        {/* ── ROW 5: Breakdown + Summary ── */}
+        {/* ── ROW 3: Breakdown + Summary ── */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
           {/* Segment Value Breakdown */}
@@ -554,8 +425,8 @@ export const Dashboard: React.FC<DashboardProps> = ({ onApiStatusChange, onMenuT
                 { label: 'Avg Rev / Customer', value: `£${total_customers > 0 ? (total_revenue / total_customers).toFixed(0) : 0}`, icon: <DollarSign size={14} />, color: '#10b981' },
                 { label: 'Avg Txns / Customer', value: total_customers > 0 ? (total_transactions / total_customers).toFixed(1) : 0, icon: <BarChart2 size={14} />, color: '#818cf8' },
                 { label: 'Customer Retention', value: `${(100 - churn_rate * 100).toFixed(1)}%`, icon: <Target size={14} />, color: '#34d399' },
-                { label: 'Stable Customers', value: churn.not_churn.toLocaleString(), icon: <Zap size={14} />, color: '#f59e0b' },
-                { label: 'Revenue Months', value: revenue_over_time.length, icon: <Activity size={14} />, color: '#22d3ee' },
+                // { label: 'Stable Customers', value: churn?.not_churned_customers.toLocaleString(), icon: <Zap size={14} />, color: '#f59e0b' },
+                // { label: 'Total Predictions', value: churn.total_predictions.toLocaleString(), icon: <Activity size={14} />, color: '#22d3ee' },
                 { label: 'Unique Segments', value: segmentEntries.length, icon: <Sparkles size={14} />, color: '#f472b6' },
               ].map((item, idx) => (
                 <div key={idx}
