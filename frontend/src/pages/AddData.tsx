@@ -85,13 +85,17 @@ export const AddData: React.FC<AddDataProps> = ({ onMenuToggle }) => {
     setSubmittingSingle(true);
     setSingleApiError(null);
 
+    const numericQuantity = parseInt(quantity, 10);
+    const numericUnitPrice = parseFloat(unitPrice);
+
     const payload = {
       customer_id: parseInt(customerId.trim(), 10),
       invoice_no: invoiceNo.trim(),
       invoice_date: invoiceDate,
-      quantity: parseInt(quantity, 10),
-      unit_price: parseFloat(unitPrice),
+      quantity: numericQuantity,
+      unit_price: numericUnitPrice,
       stock_code: stockCode.trim(),
+      total_price: numericQuantity * numericUnitPrice,
     };
 
     try {
