@@ -1,10 +1,16 @@
-# End-to-End Customer Segmentation System
+# End-to-End Customer Segmentation & Churn Prediction System
 
-An advanced, end-to-end Customer Segmentation system that seamlessly integrates Machine Learning, a FastAPI backend, a database, and an interactive React frontend dashboard to bridge the gap between predictive modeling and actionable business insights.
+An advanced, end-to-end **Customer Analytics System** that seamlessly integrates Machine Learning, a FastAPI backend, a database, and an interactive React frontend dashboard to bridge the gap between predictive modeling and actionable business insights.
+
+The system combines two independent Machine Learning solutions:
+
+- **Customer Segmentation:** Groups customers based on their purchasing behavior.
+- **Churn Prediction:** Predicts the probability that a customer will churn and identifies customers who may require retention actions.
 
 ---
 
 ## Table of Contents
+
 1. [Project Overview](#project-overview)
 2. [System Architecture & Data Flow](#system-architecture--data-flow)
 3. [Machine Learning & Modeling](#machine-learning--modeling)
@@ -12,111 +18,77 @@ An advanced, end-to-end Customer Segmentation system that seamlessly integrates 
 5. [Frontend Dashboard & User Flow](#frontend-dashboard--user-flow)
 6. [Application Screenshots](#application-screenshots)
 7. [Live Demo](#live-demo)
+8. [Future Improvements](#future-improvements)
 
 ---
 
 ## 1. Project Overview
 
-This project is an end-to-end **Customer Segmentation System** that combines Machine Learning, a backend API, a database, and an interactive frontend dashboard. 
+This project is an end-to-end **Customer Analytics System** that combines Machine Learning, a FastAPI backend, a PostgreSQL database, and an interactive React frontend.
 
-The system takes raw retail transaction data, transforms it into customer-level RFM features, applies a K-Means clustering model, and presents the resulting customer segments through an interactive web application.
+The system processes customer transaction data and transforms it into customer-level behavioral features. These features are then used by two independent Machine Learning pipelines:
 
-The main idea of the application is to connect the Machine Learning model with an understandable business interface. Instead of exposing the user directly to raw model outputs (like `Cluster 2`), the system translates them into meaningful business segments (like `Champions / VIP`) displayed across an intuitive 3-tier analysis flow:
-- **Dashboard View** (High-level business insights)
-- **Customer Level** (Individual customer profiles and history)
-- **Transaction Level** (Granular purchase data)
+1. **Customer Segmentation**
+   - Uses RFM and behavioral features.
+   - Applies a K-Means clustering model.
+   - Assigns customers to meaningful business segments such as:
+     - Champions / VIP
+     - Potential Loyalists
+     - At-Risk / Hibernating
+
+2. **Churn Prediction**
+   - Uses customer behavioral and purchase-pattern features.
+   - Applies a supervised classification model.
+   - Predicts the customer's churn probability.
+   - Classifies the customer as either:
+     - Churn
+     - Not Churn
+
+The application connects these two predictions at the **customer level**, allowing users to understand both:
+
+> **Who the customer is from a behavioral perspective, and whether they are likely to churn.**
+
+Instead of exposing raw Machine Learning outputs such as `Cluster 2` or a probability score alone, the system translates predictions into understandable business insights.
+
+The application follows a 3-tier analysis flow:
+
+- **Dashboard View** — High-level business insights
+- **Customer Level** — Individual customer profile, segmentation, and churn prediction
+- **Transaction Level** — Detailed purchase history
 
 ---
 
 ## 2. System Architecture & Data Flow
 
 ```text
-Raw Transaction Data
-        ↓
-Data Cleaning & RFM Feature Engineering (Recency, Frequency, Monetary)
-        ↓
-Customer-Level Data
-        ↓
-K-Means Customer Segmentation & Scaler/Encoder Pipeline
-        ↓
-FastAPI Backend & Database
-        ↓
-React Frontend Dashboard
-        ↓
-Business Insights & Customer Management
-```
-
----
-
-## 3. Machine Learning & Modeling
-
-The machine learning pipeline processes historical transaction data to categorize customers based on purchasing behavior:
-- **RFM Extraction:** Computes Recency, Frequency, and Monetary metrics for every customer.
-- **Preprocessing:** Utilizes feature scaling and encoding to prepare data for clustering.
-- **Clustering:** Implements the **K-Means** algorithm to group customers into distinct behavioral segments (e.g., Champions, Potential Loyalists, At-Risk).
-- **Prediction Pipeline:** Exposes endpoints to process new customer metrics and assign them to their respective clusters instantly.
-
----
-
-## 4. Backend & Database
-
-- **FastAPI Framework:** Powers the backend API, serving model predictions, customer data, and analytical metrics.
-- **Data Management:** Handles data retrieval from the database, feeding clean and structured information directly to the frontend interface.
-
----
-
-## 5. Frontend Dashboard & User Flow
-
-The website is structured around three main levels of analysis:
-
-### 1. Dashboard
-Provides a high-level overview of the customer segmentation results:
-- Total Customers & Segment Counts (Champions/VIP, Potential Loyalists, At-Risk/Hibernating)
-- Segment Distribution (visualized using charts)
-- Average RFM Metrics (Recency, Frequency, Monetary)
-- Recent Customer Insights
-
-### 2. Customers
-Connects aggregate business views with individual customer profiles:
-- Browse all customers and select specific profiles
-- Inspect individual customer information, assigned segment, and RFM scores
-- View specific transaction history tied to that customer
-
-### 3. Transactions
-Provides access to granular transaction-level data:
-- Inspect individual invoices, dates, quantities, unit prices, and total transaction values
-- Connects high-level customer segments back to the raw purchasing events
-
-### Complete User Flow
-```text
-                    ┌──────────────┐
-                    │   Dashboard  │
-                    └──────┬───────┘
-                           ↓
-                 Overall Segmentation
-                           ↓
-                    ┌──────────────┐
-                    │   Customers  │
-                    └──────┬───────┘
-                           ↓
-                  Select Specific Customer
-                           ↓
-                ┌─────────────────────┐
-                │ Customer RFM Profile │
-                │ + Segment + History │
-                └──────────┬──────────┘
-                           ↓
-                    ┌──────────────┐
-                    │ Transactions │
-                    └──────────────┘
-                           ↓
-                  Transaction Details
+                     Raw Transaction Data
+                              ↓
+                    Data Cleaning & Processing
+                              ↓
+                    Customer Transaction Data
+                              ↓
+                    RFM & Behavioral Features
+                              ↓
+             ┌────────────────┴────────────────┐
+             ↓                                 ↓
+   Customer Segmentation                 Churn Prediction
+       K-Means Model                 Classification Model
+             ↓                                 ↓
+     Customer Segment                 Churn Probability
+     (VIP / Loyal / Risk)             (Churn / Not Churn)
+             └────────────────┬────────────────┘
+                              ↓
+                       PostgreSQL Database
+                              ↓
+                         FastAPI Backend
+                              ↓
+                         React Frontend
+                              ↓
+                   Business Insights & Actions
 ```
 ## Future Improvements
 
-- **Churn Clustering Integration:** Implementing advanced clustering and predictive models specifically for customer churn analysis to identify at-risk customers before they churn and proactively target them with retention strategies.
-- **Enhanced Real-time Analytics:** Scaling the backend processing pipeline to handle live streaming transaction data for instant segment updates.
-- **Advanced Recommendation System:** Integrating personalized product recommendations based on customer segment behavior.
+- **Adding Authentication:** Implement secure user authentication and authorization to protect customer data and restrict access to the application.
 ---
 
 ## 6. Application Screenshots
