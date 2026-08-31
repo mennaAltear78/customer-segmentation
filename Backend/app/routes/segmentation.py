@@ -160,6 +160,12 @@ def process_customer(customer_id: int, db: Session):
     return {
         "customer_id": customer_id,
 
+        "rfm": {
+            "recency": float(rfm["Recency"]),
+            "frequency": float(rfm["Frequency"]),
+            "monetary": float(rfm["Monetary"])
+        },
+
         "segmentation": {
             "cluster_id": int(
                 segmentation_result["cluster_id"]
@@ -285,10 +291,7 @@ def add_transaction(
 
         db.commit()
 
-        return {
-            "message": "Transaction added successfully",
-            **result
-        }
+        return result
 
     except Exception as e:
 
@@ -470,10 +473,10 @@ async def upload_transactions_csv(
         # -------------------------------------------------
 
         return {
-            "message": "CSV uploaded successfully",
-            "customers_processed": len(customer_ids),
             "transactions_added": len(df),
-            "customers": results
+            "customers_processed": len(customer_ids),
+            "segmentation_updated": len(customer_ids),
+            "churn_updated": len(customer_ids)
         }
 
     except HTTPException:

@@ -10,8 +10,9 @@ class Transaction(BaseModel):
     quantity: int
     unit_price: float
     stock_code: str
-    total_price: float
+    total_price: float | None = None
 
 class CustomerPrediction(BaseModel):
     customer_id: int
     transactions: list[Transaction]
+    

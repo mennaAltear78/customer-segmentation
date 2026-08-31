@@ -12,6 +12,7 @@ class Customer(Base):
 
     transactions = relationship("CustomerTransaction", back_populates="customer", cascade="all, delete-orphan")
     rfm = relationship("CustomerRFM", back_populates="customer", uselist=False, cascade="all, delete-orphan")
+    churn = relationship("CustomerChurn", back_populates="customer", uselist=False, cascade="all, delete-orphan")
 
 class CustomerTransaction(Base):
     __tablename__ = "customer_transactions"
@@ -70,3 +71,17 @@ class CustomerRFM(Base):
         "Customer",
         back_populates="rfm"
     )
+
+
+class CustomerChurn(Base):
+    __tablename__ = "customer_churn"
+
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    customer_id = Column(Integer, ForeignKey("customers.customer_id"), unique=True, nullable=False)
+    churn_probability = Column(Float, nullable=False)
+    prediction = Column(String, nullable=False)
+    threshold = Column(Float, nullable=False)
+    predicted_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    # Relationship with Customer
+    customer = relationship("Customer", back_populates="churn")
