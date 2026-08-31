@@ -99,7 +99,7 @@ Here is a preview of the application interface across its main sections:
 ![Overview](images/dashboard.png)
 
 ### Customers Directory
-![Customers Page](images/customersChurn.png)
+![Customers Page](images/customersChrun.png)
 
 ### Customer Details
 ![Customer Details](images/customerChurn.png)
