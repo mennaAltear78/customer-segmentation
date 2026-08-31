@@ -96,19 +96,19 @@ The application follows a 3-tier analysis flow:
 Here is a preview of the application interface across its main sections:
 
 ### Overview & General View
-![Overview](images/image.png)
+![Overview](images/dashboard.png)
 
 ### Customers Directory
-![Customers Page](images/customers.png)
+![Customers Page](images/customersChurn.png)
 
 ### Customer Details
-![Customer Details](images/customer.png)
+![Customer Details](images/customerChurn.png)
 
 ### Transactions View
 ![Transactions Page](images/transications.png)
 
 ### Prediction & Pipeline View
-![Prediction Page](images/prediction.png)
+![Prediction Page](images/uploadData.png)
 ![Prediction Details](images/prediction2.png)
 
 ---
