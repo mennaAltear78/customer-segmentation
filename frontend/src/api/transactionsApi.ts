@@ -75,11 +75,7 @@ export const uploadTransactionsCSV = async (file: File): Promise<CSVUploadRespon
   const formData = new FormData();
   formData.append('file', file);
 
-  const response = await apiClient.post<CSVUploadResponse>('/api/transactions/upload', formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-  });
+  const response = await apiClient.post<CSVUploadResponse>('/api/transactions/upload', formData);
 
   return response.data;
 };

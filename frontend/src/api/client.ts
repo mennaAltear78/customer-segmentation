@@ -10,6 +10,14 @@ const baseURL = isLocal
 export const apiClient = axios.create({
   baseURL,
   headers: {
-    'Content-Type': 'application/json',
+    Accept: 'application/json',
   },
+});
+
+apiClient.interceptors.request.use((config) => {
+  if (config.data instanceof FormData) {
+    delete config.headers?.['Content-Type'];
+  }
+
+  return config;
 });
