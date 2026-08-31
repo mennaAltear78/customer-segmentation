@@ -29,6 +29,7 @@ export interface AddTransactionRequest {
   quantity: number;
   unit_price: number;
   stock_code: string;
+  total_price?: number;
 }
 
 export interface AddTransactionResponse {
@@ -73,6 +74,12 @@ export const addTransaction = async (data: AddTransactionRequest): Promise<AddTr
 export const uploadTransactionsCSV = async (file: File): Promise<CSVUploadResponse> => {
   const formData = new FormData();
   formData.append('file', file);
-  const response = await apiClient.post<CSVUploadResponse>('/api/transactions/upload', formData);
+
+  const response = await apiClient.post<CSVUploadResponse>('/api/transactions/upload', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+
   return response.data;
 };
