@@ -38,19 +38,19 @@
 
 /* Dark mode overrides */
 html.dark {
-  --bg-primary: #0b0f19;
-  --bg-secondary: #131b2e;
-  --border-color: #1e293b;
-  --text-primary: #f8fafc;
-  --text-secondary: #94a3b8;
-  --text-tertiary: #64748b;
-  --accent: #6366f1;
-  --accent-hover: #4f46e5;
-  --accent-light: rgba(99, 102, 241, 0.12);
-  --accent-border: rgba(99, 102, 241, 0.3);
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -4px rgba(0, 0, 0, 0.2);
+  --bg-primary: #070b14;
+  --bg-secondary: #0d1424;
+  --border-color: #1a2540;
+  --text-primary: #f1f5f9;
+  --text-secondary: #7c8fa6;
+  --text-tertiary: #4b6080;
+  --accent: #818cf8;
+  --accent-hover: #6366f1;
+  --accent-light: rgba(129, 140, 248, 0.14);
+  --accent-border: rgba(129, 140, 248, 0.28);
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 4px 12px -1px rgba(0, 0, 0, 0.5), 0 2px 6px -1px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 16px 32px -4px rgba(0, 0, 0, 0.6), 0 6px 12px -4px rgba(0, 0, 0, 0.3);
 
   /* Segment colors in dark mode */
   --color-vip-bg: rgba(4, 120, 87, 0.2);

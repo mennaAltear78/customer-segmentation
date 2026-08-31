@@ -24,19 +24,21 @@ export const SegmentChart: React.FC<SegmentChartProps> = ({ data }) => {
   }
 
   return (
-    <div className="flex flex-col md:flex-row items-center justify-between gap-8 py-4">
+    <div className="flex h-full flex-col items-center justify-between gap-3 overflow-hidden py-1 md:flex-row">
       {/* Chart container */}
-      <div className="w-full md:w-1/2 h-64 relative flex items-center justify-center">
+      <div className=" relative flex h-full min-h-0 w-full items-center justify-center md:w-[48%]">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <Pie
               data={data}
               cx="50%"
               cy="50%"
-              innerRadius={65}
-              outerRadius={90}
-              paddingAngle={4}
+              innerRadius={40}
+              outerRadius={56}
+              paddingAngle={3}
               dataKey="value"
+              stroke="var(--bg-secondary)"
+              strokeWidth={2}
             >
               {data.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={entry.color} />
@@ -53,40 +55,40 @@ export const SegmentChart: React.FC<SegmentChartProps> = ({ data }) => {
             />
           </PieChart>
         </ResponsiveContainer>
-        <div className="absolute flex flex-col items-center justify-center">
-          <span className="text-sm font-semibold tracking-wide text-[var(--text-tertiary)] uppercase">
+        <div className="pointer-events-none absolute flex flex-col items-center justify-center">
+          <span className="text-[9px] font-semibold uppercase tracking-[0.16em] text-[var(--text-tertiary)]">
             Total
           </span>
-          <span className="text-3xl font-extrabold text-[var(--text-primary)]">
+          <span className="font-serif text-2xl font-semibold text-[var(--text-primary)]">
             {total}
           </span>
         </div>
       </div>
 
       {/* Legend */}
-      <div className="w-full md:w-1/2 space-y-3.5">
-        <h4 className="text-sm font-semibold text-[var(--text-secondary)] border-b border-[var(--border-color)] pb-2 mb-2">
+      <div className="w-full min-w-0 space-y-0.5 md:w-[52%]">
+        <h4 className="mb-1 border-b border-[var(--border-color)] pb-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-[var(--text-tertiary)]">
           Segment Details
         </h4>
         {data.map((entry, index) => (
           <div
             key={index}
-            className="flex items-center justify-between p-2 rounded-lg hover:bg-[var(--bg-primary)] transition-all"
+            className="flex items-center justify-between rounded-md px-1.5 py-1.5 transition-colors hover:bg-[var(--bg-primary)]"
           >
-            <div className="flex items-center gap-3">
+            <div className="flex min-w-0 items-center gap-2">
               <span
-                className="w-3.5 h-3.5 rounded-full border border-black/10 shrink-0"
+                className="h-2 w-2 shrink-0 rounded-full"
                 style={{ backgroundColor: entry.color }}
               ></span>
-              <span className="text-sm font-medium text-[var(--text-primary)]">
+              <span className="truncate text-[10px] font-medium text-[var(--text-primary)]">
                 {entry.name}
               </span>
             </div>
-            <div className="flex items-center gap-4 text-right">
-              <span className="text-sm font-semibold text-[var(--text-primary)]">
-                {entry.value}
+            <div className="flex shrink-0 items-center gap-2 text-right">
+              <span className="text-xs font-semibold text-[var(--text-primary)]">
+                {entry.value.toLocaleString()}
               </span>
-              <span className="text-xs text-[var(--text-secondary)] bg-[var(--border-color)] px-2 py-0.5 rounded font-medium min-w-[50px] inline-block">
+              <span className="inline-block min-w-[42px] rounded bg-[var(--border-color)] px-1.5 py-0.5 text-[10px] font-medium text-[var(--text-secondary)]">
                 {entry.percentage.toFixed(1)}%
               </span>
             </div>

@@ -4,7 +4,7 @@ import {
   LayoutDashboard, 
   Users, 
   Receipt, 
-  LineChart, 
+  PlusCircle, 
   Activity, 
   Wifi, 
   WifiOff, 
@@ -23,7 +23,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ apiOnline, isOpen, onClose }) 
     { name: 'Dashboard', path: '/', icon: LayoutDashboard },
     { name: 'Customers', path: '/customers', icon: Users },
     { name: 'Transactions', path: '/transactions', icon: Receipt },
-    { name: 'Prediction', path: '/prediction', icon: LineChart },
+    { name: 'Add Data', path: '/add-data', icon: PlusCircle },
   ];
 
   return (

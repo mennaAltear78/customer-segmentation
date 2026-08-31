@@ -5,7 +5,7 @@ import { Dashboard } from './pages/Dashboard';
 import { Customers } from './pages/Customers';
 import { CustomerDetails } from './pages/CustomerDetails';
 import { Transactions } from './pages/Transactions';
-import { Prediction } from './pages/Prediction';
+import { AddData } from './pages/AddData';
 import { getDashboardData } from './api/dashboardApi';
 
 function App() {
@@ -80,8 +80,8 @@ function App() {
                 element={<Transactions onMenuToggle={handleMenuToggle} />} 
               />
               <Route 
-                path="/prediction" 
-                element={<Prediction onMenuToggle={handleMenuToggle} />} 
+                path="/add-data" 
+                element={<AddData onMenuToggle={handleMenuToggle} />} 
               />
               {/* Fallback route */}
               <Route path="*" element={<Navigate to="/" replace />} />

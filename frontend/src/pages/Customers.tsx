@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  getCustomersRFM,
-  type RFMRecord
+  getCustomers,
+  type CustomerRFMRecord
 } from '../api/customersApi';
 import { SegmentBadge } from '../components/SegmentBadge';
 import { SearchInput, FilterDropdown } from '../components/SearchAndFilter';
@@ -17,7 +17,7 @@ interface CustomersProps {
 
 export const Customers: React.FC<CustomersProps> = ({ onMenuToggle }) => {
   const navigate = useNavigate();
-  const [records, setRecords] = useState<RFMRecord[]>([]);
+  const [records, setRecords] = useState<CustomerRFMRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -38,8 +38,8 @@ export const Customers: React.FC<CustomersProps> = ({ onMenuToggle }) => {
     setError(null);
 
     try {
-      const data = await getCustomersRFM();
-      setRecords(data.rfm || []);
+      const data = await getCustomers();
+      setRecords(data.customers || []);
     } catch (err: any) {
       console.error(err);
       setError('Unable to load customer segmentation data. Please check that the API is online.');
@@ -198,12 +198,12 @@ export const Customers: React.FC<CustomersProps> = ({ onMenuToggle }) => {
                 <thead>
                   <tr className="border-b border-[var(--border-color)] bg-[var(--bg-primary)]/40 text-[var(--text-secondary)] text-xs uppercase tracking-wider font-semibold">
                     <th className="py-3.5 px-6">Customer ID</th>
+                    <th className="py-3.5 px-6">Segment</th>
+                    <th className="py-3.5 px-4 text-center">Churn Risk</th>
+                    <th className="py-3.5 px-4 text-right">Probability</th>
                     <th className="py-3.5 px-4 text-right">Recency</th>
                     <th className="py-3.5 px-4 text-right">Frequency</th>
                     <th className="py-3.5 px-4 text-right">Monetary</th>
-                    <th className="py-3.5 px-4 text-center">Cluster</th>
-                    <th className="py-3.5 px-6">Segment</th>
-                    <th className="py-3.5 px-6">Updated At</th>
                     <th className="py-3.5 px-6 text-center">Action</th>
                   </tr>
                 </thead>
@@ -213,6 +213,21 @@ export const Customers: React.FC<CustomersProps> = ({ onMenuToggle }) => {
                       <td className="py-3 px-6 font-semibold font-mono text-[var(--text-primary)]">
                         #{row.customer_id}
                       </td>
+                      <td className="py-3 px-6">
+                        <SegmentBadge segment={row.segment} />
+                      </td>
+                      <td className="py-3 px-4 text-center">
+                        <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold ${
+                          row.prediction === 'Churn' 
+                            ? 'bg-red-50 text-red-700 dark:bg-red-950/30 dark:text-red-400' 
+                            : 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400'
+                        }`}>
+                          {row.prediction}
+                        </span>
+                      </td>
+                      <td className="py-3 px-4 text-right font-mono font-medium text-[var(--text-secondary)]">
+                        {(row.churn_probability * 100).toFixed(0)}%
+                      </td>
                       <td className="py-3 px-4 text-right text-[var(--text-secondary)]">
                         {row.recency} d
                       </td>
@@ -221,15 +236,6 @@ export const Customers: React.FC<CustomersProps> = ({ onMenuToggle }) => {
                       </td>
                       <td className="py-3 px-4 text-right font-medium text-[var(--text-secondary)]">
                         ${row.monetary.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                      </td>
-                      <td className="py-3 px-4 text-center text-xs font-mono font-medium text-[var(--text-secondary)]">
-                        {row.cluster_id !== null ? row.cluster_id : '-'}
-                      </td>
-                      <td className="py-3 px-6">
-                        <SegmentBadge segment={row.segment} />
-                      </td>
-                      <td className="py-3 px-6 text-xs text-[var(--text-secondary)]">
-                        {row.updated_at ? new Date(row.updated_at).toLocaleString() : new Date(row.created_at).toLocaleString()}
                       </td>
                       <td className="py-3 px-6 text-center">
                         <button
